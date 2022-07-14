@@ -16,7 +16,7 @@ export function SendLamport(address: string, value: number): JSX.Element | null 
         fromPubkey: publicKey,
         toPubkey: new PublicKey(address),
         lamports: value,
-      })
+      }),
     )
     setSendMsg('Waiting for confirm')
     let signature
@@ -31,7 +31,7 @@ export function SendLamport(address: string, value: number): JSX.Element | null 
     const result = await connection.confirmTransaction(signature, 'processed')
     setSendMsg(result.value.err?.toString() || 'Success')
     setTimeout(() => setSendMsg(''), 5000)
-  }, [publicKey, sendTransaction, connection])
+  }, [publicKey, sendTransaction, connection, address, value])
 
   return publicKey ? (
     <Button variant='success' onClick={onClick} disabled={!publicKey && sendMsg}>

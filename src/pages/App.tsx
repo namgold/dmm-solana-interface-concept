@@ -1,16 +1,42 @@
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import React, { FC } from 'react'
-import { SendLamport } from '../components/SendLamport'
+import '@solana/wallet-adapter-react-ui/styles.css'
+import { Navigate, Route, Routes } from 'react-router'
+import { BrowserRouter } from 'react-router-dom'
+import Menu from '../components/Menu'
+import styled from 'styled-components'
+import Send from './Send'
+import Swap from './Swap'
 
-require('./App.css')
-require('@solana/wallet-adapter-react-ui/styles.css')
+const AppWrapper = styled.div`
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+`
+
+const BodyWrapper = styled.div`
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 2rem;
+`
 
 const App: FC = () => {
   return (
-    <div className='App'>
-      <WalletMultiButton />
-      <SendLamport address='HdTPmcFS3GTT2LqyRf1VRVoAKxhBiiiXWy11P3gnP5zr' value={14} />
-    </div>
+    <BrowserRouter>
+      <AppWrapper>
+        <Menu />
+        <BodyWrapper>
+          <Routes>
+            <Route path='/swap' element={<Swap />}></Route>
+            <Route path='/send' element={<Send />}></Route>
+            <Route path='*' element={<Navigate to='swap' replace />} />
+          </Routes>
+        </BodyWrapper>
+      </AppWrapper>
+    </BrowserRouter>
   )
 }
 

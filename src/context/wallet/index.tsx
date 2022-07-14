@@ -1,19 +1,25 @@
 import React, { FC, ReactNode, useMemo } from 'react'
 import { createDefaultAuthorizationResultCache, SolanaMobileWalletAdapter } from '@solana-mobile/wallet-adapter-mobile'
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react'
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
-import { GlowWalletAdapter, PhantomWalletAdapter, SolletWalletAdapter, SlopeWalletAdapter, SolflareWalletAdapter, TorusWalletAdapter } from '@solana/wallet-adapter-wallets'
+import {
+  GlowWalletAdapter,
+  PhantomWalletAdapter,
+  SolletWalletAdapter,
+  SlopeWalletAdapter,
+  SolflareWalletAdapter,
+  TorusWalletAdapter,
+} from '@solana/wallet-adapter-wallets'
 import { clusterApiUrl } from '@solana/web3.js'
 
-require('@solana/wallet-adapter-react-ui/styles.css')
+import '@solana/wallet-adapter-react-ui/styles.css'
+import { SelectedNetwork } from '../../constants/networks'
 
 const Context: FC<{ children: ReactNode }> = ({ children }) => {
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
-  const network = WalletAdapterNetwork.Testnet
 
   // You can also provide a custom RPC endpoint.
-  const endpoint = useMemo(() => clusterApiUrl(network), [network])
+  const endpoint = useMemo(() => clusterApiUrl(SelectedNetwork), [])
 
   // @solana/wallet-adapter-wallets includes all the adapters but supports tree shaking and lazy loading --
   // Only the wallets you configure here will be compiled into your application, and only the dependencies
@@ -21,17 +27,17 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
   const wallets = useMemo(
     () => [
       new SolanaMobileWalletAdapter({
-        appIdentity: { name: 'Solana Create React App Starter App' },
+        appIdentity: { name: 'KyberSwap DMM Solana' },
         authorizationResultCache: createDefaultAuthorizationResultCache(),
       }),
-      new PhantomWalletAdapter({ network }),
+      new PhantomWalletAdapter({ network: SelectedNetwork }),
       new GlowWalletAdapter(),
-      new SlopeWalletAdapter({ network }),
-      new SolflareWalletAdapter({ network }),
+      new SlopeWalletAdapter({ network: SelectedNetwork }),
+      new SolflareWalletAdapter({ network: SelectedNetwork }),
       new TorusWalletAdapter(),
-      new SolletWalletAdapter({ network }),
+      new SolletWalletAdapter({ network: SelectedNetwork }),
     ],
-    [network]
+    [],
   )
 
   return (
