@@ -5,12 +5,10 @@ import {
   CurrencyAmount,
   Percent,
   Pool,
-  Route,
   sendAndConfirmTransaction,
   SOL,
   Token,
   TokenAmount,
-  Trade,
   WSOL,
 } from '@namgold/dmm-solana-sdk'
 import { useWallet } from '@solana/wallet-adapter-react'

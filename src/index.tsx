@@ -5,7 +5,6 @@ import WalletContext from './context/wallet'
 import { createRoot } from 'react-dom/client'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './index.css'
-import { SupportedNetwork } from './constants/networks'
 
 const container = document.getElementById('root') as any
 const root = createRoot(container) // createRoot(container!) if you use TypeScript

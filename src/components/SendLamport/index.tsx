@@ -24,7 +24,7 @@ export function SendLamport({ address, value }: { address: string; value: number
           lamports: value,
         }),
       )
-      let blockhash = (await connection.getLatestBlockhash('finalized')).blockhash
+      const blockhash = (await connection.getLatestBlockhash('finalized')).blockhash
       transaction.recentBlockhash = blockhash
       transaction.feePayer = publicKey
       let signature
