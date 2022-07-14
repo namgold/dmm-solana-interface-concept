@@ -58,7 +58,7 @@
         "eslint-plugin-react": "^7.19.0",
         "eslint-plugin-react-hooks": "^4.0.0",
         "typescript": "^4.5.5",
-        "vite": "^2.9.13"
+        "vite": "^3.0.0"
     },
     "resolutions": {
         "bn.js": "^5"
