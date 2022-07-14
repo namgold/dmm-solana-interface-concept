@@ -11,5 +11,8 @@ export const isValidAddress = (address: string): boolean => {
 }
 
 export const shortenAddress = (address: string): string => {
-  return address.slice(0, 3) + '...' + address.slice(-3)
+  return address.slice(0, 5) + '...' + address.slice(-5)
+}
+export const shortenTx = (address: string): string => {
+  return address.slice(0, 7) + '...' + address.slice(-7)
 }

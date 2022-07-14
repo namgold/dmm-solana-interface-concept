@@ -1,7 +1,6 @@
 import { Currency, Fetcher, Pool, SOL, Token, WSOL } from '@namgold/dmm-solana-sdk'
 import { useEffect, useState } from 'react'
 import useContext from './useContext'
-import BN from 'bn.js'
 
 const usePools = (fromToken: Currency | null, toToken: Currency | null): Pool[] | null | undefined => {
   const context = useContext()
