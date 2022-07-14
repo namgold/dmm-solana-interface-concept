@@ -66,7 +66,7 @@
     "scripts": {
         "dev": "env-cmd -f .env.testnet vite",
         "production": "env-cmd -f .env.production vite",
-        "build": "vite build",
+        "build": "env-cmd -f .env.production vite build",
         "preview": "vite preview"
     },
     "eslintConfig": {
