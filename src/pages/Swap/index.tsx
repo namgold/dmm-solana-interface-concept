@@ -179,7 +179,7 @@ const Swap: FC = () => {
         <Form.Group className='mb-3'>
           <Form.Label>Swap:</Form.Label>
           <Row>
-            <Col sm={7}>
+            <Col sm={8}>
               <Form.Control
                 type='number'
                 value={fromValue?.toExact()}
@@ -189,7 +189,7 @@ const Swap: FC = () => {
                 }}
               />
             </Col>
-            <Col sm={5}>
+            <Col sm={4}>
               <Form.Select
                 onChange={(event) => {
                   let token: Currency | null
@@ -217,10 +217,10 @@ const Swap: FC = () => {
         <Form.Group className='mb-3' controlId='formBasicPassword'>
           <Form.Label>For</Form.Label>
           <Row>
-            <Col sm={7}>
+            <Col sm={8}>
               <Form.Control type='number' value={toValue?.toExact() ?? 0} readOnly />
             </Col>
-            <Col sm={5}>
+            <Col sm={4}>
               <Form.Select
                 onChange={(event) => {
                   let token: Currency | null
