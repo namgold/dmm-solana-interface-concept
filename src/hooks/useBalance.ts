@@ -6,6 +6,7 @@ import { Connection, PublicKey } from '@solana/web3.js'
 import { getMint, TOKEN_PROGRAM_ID, AccountLayout } from '@solana/spl-token'
 import { useTokenList } from './useTokenlist'
 
+const cacheSOLBalanceRequest = new WeakMap<Connection, { [publicKey: string]: Promise<number> }>()
 export const useSOLBalance = (): CurrencyAmount | false => {
   const { publicKey } = useWallet()
   const { connection } = useConnection()
@@ -14,15 +15,26 @@ export const useSOLBalance = (): CurrencyAmount | false => {
   useEffect(() => {
     const getBalance = async () => {
       if (publicKey) {
-        const balance = await connection.getBalance(publicKey)
-        setSolBalance(CurrencyAmount.sol(new BN(balance)))
+        let balanceRequest = cacheSOLBalanceRequest.get(connection)?.[String(publicKey)]
+        if (!balanceRequest) {
+          balanceRequest = connection.getBalance(publicKey)
+          const connectionCached = cacheSOLBalanceRequest.get(connection) || {}
+          connectionCached[String(publicKey)] = balanceRequest
+          cacheSOLBalanceRequest.set(connection, connectionCached)
+        }
+        const balance = await balanceRequest
+        if (solBalance === false || new BN(balance).cmp(solBalance.raw) !== 0)
+          setSolBalance(CurrencyAmount.sol(new BN(balance)))
       } else {
         if (solBalance !== false) setSolBalance(false)
       }
     }
     setSolBalance(false)
     getBalance()
-  }, [publicKey, connection, solBalance])
+
+    // do not add solBalance to deps list, it would trigger infinity loops calling rpc calls
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [publicKey, connection])
 
   return solBalance
 }
