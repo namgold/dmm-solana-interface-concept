@@ -311,7 +311,7 @@ const Swap: FC = () => {
           </Col>
         )}
         <Col>
-          <FullWidthButton variant='success' onClick={doSwap} disabled={!enableSwap || !(approved || useSOL)}>
+          <FullWidthButton variant='success' onClick={doSwap} disabled={!enableSwap || !(approved || isFromSOL)}>
             Swap
           </FullWidthButton>
         </Col>
