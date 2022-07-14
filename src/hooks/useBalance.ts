@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BN } from '@project-serum/anchor'
-import { Currency, CurrencyAmount, Token, TokenAmount, WSOL, currencyEquals } from '@namgold/dmm-solana-sdk'
+import { Currency, CurrencyAmount, Token, TokenAmount } from '@namgold/dmm-solana-sdk'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { getMint, TOKEN_PROGRAM_ID, AccountLayout } from '@solana/spl-token'
@@ -22,7 +22,7 @@ export const useSOLBalance = (): CurrencyAmount | false => {
     }
     setSolBalance(false)
     getBalance()
-  }, [publicKey, connection])
+  }, [publicKey, connection, solBalance])
 
   return solBalance
 }

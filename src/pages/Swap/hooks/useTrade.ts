@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Pool, Route, SOL, Trade, WSOL } from '@namgold/dmm-solana-sdk'
+import { Currency, CurrencyAmount, Pool, Route, Trade } from '@namgold/dmm-solana-sdk'
 import { useMemo } from 'react'
 
 const useTrade = ({
