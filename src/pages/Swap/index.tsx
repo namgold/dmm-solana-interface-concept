@@ -153,17 +153,22 @@ const Swap: FC = () => {
     console.log(`Swapping ${fromValue?.toExact()} ${fromToken?.name} for ${toValue?.toExact()} ${toToken?.name}`)
     const swap = async () => {
       if (enableSwap) {
-        // Call Router's method to construct a transaction
-        const tx = await router.swap(publicKey, trade, {
-          allowedSlippage: new Percent('1', '100'),
-        })
-        const txHash = await sendAndConfirmTransaction(provider, tx)
-        console.log('txHash', txHash)
-        setMsg(
-          <span>
-            Swap success, tx: <a href={scanTx(txHash)}>{shortenTx(txHash)}</a>
-          </span>,
-        )
+        try {
+          // Call Router's method to construct a transaction
+          const tx = await router.swap(publicKey, trade, {
+            allowedSlippage: new Percent('1', '100'),
+          })
+          const txHash = await sendAndConfirmTransaction(provider, tx)
+          console.log('txHash', txHash)
+          setMsg(
+            <span>
+              Swap success, tx: <a href={scanTx(txHash)}>{shortenTx(txHash)}</a>
+            </span>,
+          )
+        } catch (e: any) {
+          if (e?.message) setErrorMsg(e.message)
+          else setErrorMsg(String(e))
+        }
       } else {
         console.error('Cant swap yet')
       }
@@ -200,8 +205,9 @@ const Swap: FC = () => {
           debugger
           setApproved(true)
           setMsg('Approved')
-        } catch (e) {
-          setErrorMsg(String(e))
+        } catch (e: any) {
+          if (e?.message) setErrorMsg(e.message)
+          else setErrorMsg(String(e))
         }
       }
     }
