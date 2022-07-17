@@ -9,6 +9,8 @@ import {
   SlopeWalletAdapter,
   SolflareWalletAdapter,
   TorusWalletAdapter,
+  SolletExtensionWalletAdapter,
+  Coin98WalletAdapter,
 } from '@solana/wallet-adapter-wallets'
 import { clusterApiUrl } from '@solana/web3.js'
 
@@ -35,6 +37,8 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
       new SlopeWalletAdapter({ network: SelectedNetwork }),
       new SolflareWalletAdapter({ network: SelectedNetwork }),
       new TorusWalletAdapter(),
+      new Coin98WalletAdapter(),
+      new SolletExtensionWalletAdapter(),
       new SolletWalletAdapter({ network: SelectedNetwork }),
     ],
     [],

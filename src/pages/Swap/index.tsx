@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react'
+import React, { FC, MouseEventHandler, useCallback, useEffect, useState } from 'react'
 import {
   approveTokenForRouter,
   Currency,
@@ -27,6 +27,8 @@ import useRouter from './hooks/useRouter'
 import useTrade from './hooks/useTrade'
 import { isNotSOL } from '../../utils/isSOL'
 import { shortenTx } from '../../utils/address'
+import { useNeedsApproved } from './hooks/useApprove'
+import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 
 const FullWidthButton = styled(Button)`
   width: 100%;
@@ -54,12 +56,14 @@ const PoolOption = ({
   fromValue: CurrencyAmount
   onSelect: React.Dispatch<React.SetStateAction<Pool | null>>
 }) => {
-  let amountOut
+  let tokenAmountOut: TokenAmount
   try {
-    amountOut = pool.getOutputAmount(
+    tokenAmountOut = pool.getOutputAmount(
       fromValue instanceof TokenAmount ? fromValue : new TokenAmount(WSOL, fromValue.raw),
-    )
-  } catch (e) {}
+    )[0]
+  } catch (e) {
+    return null
+  }
   return (
     <Form.Check
       key={String(pool.address)}
@@ -68,11 +72,14 @@ const PoolOption = ({
       onClick={() => onSelect(pool)}
       label={
         <span style={{ whiteSpace: 'pre-line' }}>
+          Amount out: {tokenAmountOut.toExact() ?? 0} {tokenAmountOut.token.symbol}
+          <br />
+          Amp: {pool.amp.toNumber()}
+          <br />
           Address:&nbsp;
           <a target='_blank' rel='noopener noreferrer' href={scanAddress(String(pool.address))}>
-            {String(pool.address)}
+            {String(pool.address)} ↗
           </a>
-          {'\nAmp: ' + pool.amp.toNumber() + '\nAmount out: ' + (amountOut?.[0].toExact() ?? 0)}
         </span>
       }
     />
@@ -80,6 +87,7 @@ const PoolOption = ({
 }
 
 const Swap: FC = () => {
+  const { setVisible } = useWalletModal()
   const { publicKey } = useWallet()
   const [fromValue, setFromValue] = useState<CurrencyAmount | null>(null)
   const [fromToken, setFromToken] = useState<Currency | null>(null)
@@ -98,9 +106,20 @@ const Swap: FC = () => {
   const trade = useTrade({ fromToken, toToken, fromValue, selectedPool })
   const [msg, setMsg] = useState<string | null | JSX.Element>(null)
   const [errorMsg, setErrorMsg] = useState<string | null | JSX.Element>(null)
-  const [approved, setApproved] = useState(false)
   const [useSOL, setUseSOL] = useState(true)
   const isFromSOL = fromToken === SOL || fromToken === WSOL
+
+  const [approved, setApproved] = useState(false) //adhoc for error fetching approved balance, todo namgold: remove this
+  const needApproved = useNeedsApproved({ fromValue })
+
+  useEffect(() => {
+    // clear msg/errorMsg when the other appeared so they wont shown up together at the same time
+    errorMsg && setMsg(null)
+  }, [errorMsg])
+
+  useEffect(() => {
+    msg && setErrorMsg(null)
+  }, [msg])
 
   useEffect(() => {
     // fromToken changed => reset fromValue's value
@@ -125,23 +144,6 @@ const Swap: FC = () => {
     toToken && fromToken && context && fromValue && publicKey && provider && selectedPool && router && trade
 
   useEffect(() => {
-    //debug purpose only
-    console.groupCollapsed('enableSwap debug info')
-    console.log('enableSwap: ', !!enableSwap)
-    console.log('enableSwap', !!enableSwap)
-    console.log('fromToken', !!fromToken)
-    console.log('toToken', !!toToken)
-    console.log('context', !!context)
-    console.log('fromValue', !!fromValue)
-    console.log('publicKey', !!publicKey)
-    console.log('provider', !!provider)
-    console.log('selectedPool', !!selectedPool)
-    console.log('router', !!router)
-    console.log('trade', !!trade)
-    console.groupEnd()
-  }, [enableSwap, fromToken, toToken, context, fromValue, publicKey, provider, selectedPool, router, trade])
-
-  useEffect(() => {
     setSelectedPool(null)
     setApproved(false)
     setMsg(null)
@@ -149,6 +151,7 @@ const Swap: FC = () => {
     //reset selected pool right away there is any changing selected tokens
   }, [pools, fromToken, toToken])
 
+  const [swapping, setSwapping] = useState(false)
   const doSwap = useCallback(() => {
     console.log(`Swapping ${fromValue?.toExact()} ${fromToken?.name} for ${toValue?.toExact()} ${toToken?.name}`)
     const swap = async () => {
@@ -158,14 +161,18 @@ const Swap: FC = () => {
           const tx = await router.swap(publicKey, trade, {
             allowedSlippage: new Percent('1', '100'),
           })
+          setSwapping(true)
           const txHash = await sendAndConfirmTransaction(provider, tx)
+          setSwapping(false)
           console.log('txHash', txHash)
           setMsg(
             <span>
               Swap success, tx: <a href={scanTx(txHash)}>{shortenTx(txHash)}</a>
             </span>,
           )
+          setApproved(false) //todo namgold: remove this
         } catch (e: any) {
+          setSwapping(false)
           if (e?.message) setErrorMsg(e.message)
           else setErrorMsg(String(e))
         }
@@ -190,22 +197,24 @@ const Swap: FC = () => {
     calculateOut()
   }, [fromValue, fromToken, selectedPool, toToken])
 
+  const [approving, setApproving] = useState(false)
   const doApprove = useCallback(() => {
     const approve = async () => {
       if (enableSwap) {
         try {
           const allowedSlippage = new Percent('2', '100')
-
+          setApproving(true)
           await approveTokenForRouter(
             router,
             isNotSOL(fromToken) ? fromToken.mint : WSOL.mint,
             publicKey,
             trade.maximumAmountIn(allowedSlippage).raw,
           )
-          debugger
+          setApproving(false)
           setApproved(true)
           setMsg('Approved')
         } catch (e: any) {
+          setApproving(false)
           if (e?.message) setErrorMsg(e.message)
           else setErrorMsg(String(e))
         }
@@ -213,6 +222,8 @@ const Swap: FC = () => {
     }
     approve()
   }, [enableSwap, fromToken, publicKey, router, trade])
+
+  const onConnect: MouseEventHandler<HTMLButtonElement> = useCallback(() => setVisible(true), [setVisible])
 
   return (
     <SwapWrapper>
@@ -230,7 +241,10 @@ const Swap: FC = () => {
                   if (fromToken) setFromValue(convertAmount(parseFloat(event.target.value || '0'), fromToken))
                 }}
               />
-              <Form.Label>Balance: {balance instanceof CurrencyAmount ? balance.toExact() : '...'}</Form.Label>
+              <Form.Label>
+                Balance:{' '}
+                {!publicKey ? 'Please connect wallet' : balance instanceof CurrencyAmount ? balance.toExact() : '...'}
+              </Form.Label>
             </Col>
             <Col sm={4}>
               <Form.Select
@@ -307,18 +321,36 @@ const Swap: FC = () => {
         </Col>
       </Row>
       <Row>
-        {isFromSOL ? null : (
+        {!publicKey ? (
           <Col>
-            <FullWidthButton variant='success' onClick={doApprove} disabled={!enableSwap}>
-              Approve
+            <FullWidthButton variant='success' onClick={onConnect}>
+              Connect Wallet
             </FullWidthButton>
           </Col>
+        ) : (
+          <>
+            {needApproved === null || needApproved ? (
+              <Col>
+                <FullWidthButton
+                  variant='success'
+                  onClick={doApprove}
+                  disabled={approving || !enableSwap || !needApproved}
+                >
+                  {approving ? 'Approving ...' : 'Approve'}
+                </FullWidthButton>
+              </Col>
+            ) : null}
+            <Col>
+              <FullWidthButton
+                variant='success'
+                onClick={doSwap}
+                disabled={swapping || !enableSwap || (!approved && (needApproved || needApproved === null))}
+              >
+                {swapping ? 'Swapping' : 'Swap'}
+              </FullWidthButton>
+            </Col>
+          </>
         )}
-        <Col>
-          <FullWidthButton variant='success' onClick={doSwap} disabled={!enableSwap || !(approved || isFromSOL)}>
-            Swap
-          </FullWidthButton>
-        </Col>
       </Row>
       {msg ? msg : null}
       {errorMsg ? errorMsg : null}
