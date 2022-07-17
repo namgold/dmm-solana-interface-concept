@@ -21,6 +21,9 @@ const Menu = () => {
         <NavLink to='/swap' className='nav-link'>
           Swap
         </NavLink>
+        <NavLink to='/pools' className='nav-link'>
+          Pools
+        </NavLink>
         <NavLink to='/send' className='nav-link'>
           Send
         </NavLink>
