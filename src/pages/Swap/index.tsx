@@ -1,6 +1,5 @@
 import React, { FC, MouseEventHandler, useCallback, useEffect, useState } from 'react'
 import {
-  approveTokenForRouter,
   Currency,
   CurrencyAmount,
   Percent,
@@ -13,7 +12,7 @@ import {
 } from '@namgold/dmm-solana-sdk'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { BN } from '@project-serum/anchor'
-import { Button, Col, Form, Row } from 'react-bootstrap'
+import { Col, Form, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 
 import { useBalance } from '../../hooks/useBalance'
@@ -25,14 +24,11 @@ import usePools from '../../hooks/usePools'
 import { scanAddress, scanTx } from '../../utils/solscan'
 import useRouter from './hooks/useRouter'
 import useTrade from './hooks/useTrade'
-import { isNotSOL } from '../../utils/isSOL'
 import { shortenTx } from '../../utils/address'
 import { useNeedsApproved } from './hooks/useApprove'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
-
-const FullWidthButton = styled(Button)`
-  width: 100%;
-`
+import { FullWidthButton } from '../../components/Button'
+import { AMP_BPS } from '../../constants'
 
 const SwapWrapper = styled.div`
   border: 1px solid white;
@@ -74,7 +70,7 @@ const PoolOption = ({
         <span style={{ whiteSpace: 'pre-line' }}>
           Amount out: {tokenAmountOut.toExact() ?? 0} {tokenAmountOut.token.symbol}
           <br />
-          Amp: {pool.amp.toNumber()}
+          Amp: {pool.amp.toNumber() / AMP_BPS}
           <br />
           Address:&nbsp;
           <a target='_blank' rel='noopener noreferrer' href={scanAddress(String(pool.address))}>
@@ -109,8 +105,13 @@ const Swap: FC = () => {
   const [useSOL, setUseSOL] = useState(true)
   const isFromSOL = fromToken === SOL || fromToken === WSOL
 
-  const [approved, setApproved] = useState(false) //adhoc for error fetching approved balance, todo namgold: remove this
-  const needApproved = useNeedsApproved({ fromValue })
+  const {
+    needsApproved,
+    approve,
+    approving,
+    errorMsg: approveErrorMsg,
+    refreshApprove,
+  } = useNeedsApproved({ fromValue, trade })
 
   useEffect(() => {
     // clear msg/errorMsg when the other appeared so they wont shown up together at the same time
@@ -120,6 +121,10 @@ const Swap: FC = () => {
   useEffect(() => {
     msg && setErrorMsg(null)
   }, [msg])
+
+  useEffect(() => {
+    approveErrorMsg && setErrorMsg(approveErrorMsg)
+  }, [approveErrorMsg])
 
   useEffect(() => {
     // fromToken changed => reset fromValue's value
@@ -141,11 +146,10 @@ const Swap: FC = () => {
     }
   }, [currencyList, fromToken, toToken, publicKey])
   const enableSwap =
-    toToken && fromToken && context && fromValue && publicKey && provider && selectedPool && router && trade
+    toToken && fromToken && context && fromValue && publicKey && provider && selectedPool && router && !!trade
 
   useEffect(() => {
     setSelectedPool(null)
-    setApproved(false)
     setMsg(null)
     setErrorMsg(null)
     //reset selected pool right away there is any changing selected tokens
@@ -153,7 +157,6 @@ const Swap: FC = () => {
 
   const [swapping, setSwapping] = useState(false)
   const doSwap = useCallback(() => {
-    console.log(`Swapping ${fromValue?.toExact()} ${fromToken?.name} for ${toValue?.toExact()} ${toToken?.name}`)
     const swap = async () => {
       if (enableSwap) {
         try {
@@ -170,7 +173,7 @@ const Swap: FC = () => {
               Swap success, tx: <a href={scanTx(txHash)}>{shortenTx(txHash)}</a>
             </span>,
           )
-          setApproved(false) //todo namgold: remove this
+          refreshApprove()
         } catch (e: any) {
           setSwapping(false)
           if (e?.message) setErrorMsg(e.message)
@@ -180,8 +183,10 @@ const Swap: FC = () => {
         console.error('Cant swap yet')
       }
     }
-    swap()
-  }, [fromValue, fromToken?.name, toValue, toToken?.name, enableSwap, router, publicKey, trade, provider])
+    if (enableSwap) {
+      swap()
+    }
+  }, [enableSwap, router, publicKey, trade, provider, refreshApprove])
 
   useEffect(() => {
     const calculateOut = async () => {
@@ -196,32 +201,6 @@ const Swap: FC = () => {
     }
     calculateOut()
   }, [fromValue, fromToken, selectedPool, toToken])
-
-  const [approving, setApproving] = useState(false)
-  const doApprove = useCallback(() => {
-    const approve = async () => {
-      if (enableSwap) {
-        try {
-          const allowedSlippage = new Percent('2', '100')
-          setApproving(true)
-          await approveTokenForRouter(
-            router,
-            isNotSOL(fromToken) ? fromToken.mint : WSOL.mint,
-            publicKey,
-            trade.maximumAmountIn(allowedSlippage).raw,
-          )
-          setApproving(false)
-          setApproved(true)
-          setMsg('Approved')
-        } catch (e: any) {
-          setApproving(false)
-          if (e?.message) setErrorMsg(e.message)
-          else setErrorMsg(String(e))
-        }
-      }
-    }
-    approve()
-  }, [enableSwap, fromToken, publicKey, router, trade])
 
   const onConnect: MouseEventHandler<HTMLButtonElement> = useCallback(() => setVisible(true), [setVisible])
 
@@ -329,12 +308,12 @@ const Swap: FC = () => {
           </Col>
         ) : (
           <>
-            {needApproved === null || needApproved ? (
+            {needsApproved === null || needsApproved ? (
               <Col>
                 <FullWidthButton
                   variant='success'
-                  onClick={doApprove}
-                  disabled={approving || !enableSwap || !needApproved}
+                  onClick={approve}
+                  disabled={approving || !enableSwap || !needsApproved}
                 >
                   {approving ? 'Approving ...' : 'Approve'}
                 </FullWidthButton>
@@ -344,7 +323,7 @@ const Swap: FC = () => {
               <FullWidthButton
                 variant='success'
                 onClick={doSwap}
-                disabled={swapping || !enableSwap || (!approved && (needApproved || needApproved === null))}
+                disabled={swapping || !enableSwap || needsApproved || needsApproved === null}
               >
                 {swapping ? 'Swapping' : 'Swap'}
               </FullWidthButton>
