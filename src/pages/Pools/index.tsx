@@ -44,7 +44,7 @@ const Pools: FC = () => {
             onChange={(event) => {
               let token: Currency | null
               if (event.target.value === 'SOL') token = SOL
-              else token = tokenList.find((token) => String(token.mint) === event.target.value) ?? null
+              else token = tokenList.find((token) => token.mint.toBase58() === event.target.value) ?? null
 
               setFromToken(token)
               if (token === toToken) setToToken(currencyList.filter((currency) => currency != toToken)[0])
@@ -54,7 +54,7 @@ const Pools: FC = () => {
             <option style={{ display: 'none' }} />
             <option value='SOL'>SOL</option>
             {tokenList.map((token) => (
-              <option key={String(token.mint)} value={String(token.mint)}>
+              <option key={token.mint.toBase58()} value={token.mint.toBase58()}>
                 {token.symbol}
               </option>
             ))}
@@ -65,7 +65,7 @@ const Pools: FC = () => {
             onChange={(event) => {
               let token: Currency | null
               if (event.target.value === 'SOL') token = SOL
-              else token = tokenList.find((token) => String(token.mint) === event.target.value) ?? null
+              else token = tokenList.find((token) => token.mint.toBase58() === event.target.value) ?? null
 
               setToToken(token)
               if (token === fromToken) setFromToken(currencyList.filter((currency) => currency != fromToken)[0])
@@ -75,7 +75,7 @@ const Pools: FC = () => {
             <option style={{ display: 'none' }} />
             <option value='SOL'>SOL</option>
             {tokenList.map((token) => (
-              <option key={String(token.mint)} value={String(token.mint)}>
+              <option key={token.mint.toBase58()} value={token.mint.toBase58()}>
                 {token.symbol}
               </option>
             ))}

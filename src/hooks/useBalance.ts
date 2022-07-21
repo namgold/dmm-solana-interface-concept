@@ -15,11 +15,11 @@ export const useSOLBalance = (): CurrencyAmount | false => {
   useEffect(() => {
     const getBalance = async () => {
       if (publicKey) {
-        let balanceRequest = cacheSOLBalanceRequest.get(connection)?.[String(publicKey)]
+        let balanceRequest = cacheSOLBalanceRequest.get(connection)?.[publicKey.toBase58()]
         if (!balanceRequest) {
           balanceRequest = connection.getBalance(publicKey)
           const connectionCached = cacheSOLBalanceRequest.get(connection) || {}
-          connectionCached[String(publicKey)] = balanceRequest
+          connectionCached[publicKey.toBase58()] = balanceRequest
           cacheSOLBalanceRequest.set(connection, connectionCached)
         }
         const balance = await balanceRequest
@@ -100,7 +100,7 @@ export const useTokensBalances = (): { [mintAddress: string]: TokenAmount | fals
   useEffect(() => {
     const newSolBalances: { [mintAddress: string]: TokenAmount | false } = {}
     tokenList.forEach((token) => {
-      newSolBalances[String(token.mint)] = false
+      newSolBalances[token.mint.toBase58()] = false
     })
     setSolBalances(newSolBalances)
   }, [tokenList])
@@ -110,7 +110,7 @@ export const useTokensBalances = (): { [mintAddress: string]: TokenAmount | fals
       if (!atas) return
       const newSolBalances: { [mintAddress: string]: TokenAmount } = {}
       // Init all tokens balance by 0
-      tokenList.forEach((token) => (newSolBalances[String(token.mint)] = new TokenAmount(token, new BN(0))))
+      tokenList.forEach((token) => (newSolBalances[token.mint.toBase58()] = new TokenAmount(token, new BN(0))))
 
       Object.keys(atas).forEach((ataAddress) => {
         const accountInfo = atas[ataAddress].data
@@ -141,7 +141,7 @@ export const useBalance = (currency: Currency | null): CurrencyAmount | false =>
   useEffect(() => {
     if (currency) {
       if (currency instanceof Token) {
-        setBalance(tokensBalances[String(currency.mint)])
+        setBalance(tokensBalances[currency.mint.toBase58()])
       } else {
         setBalance(SOLBalance)
       }

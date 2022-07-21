@@ -84,7 +84,7 @@ const ListItem = ({ pool, index }: { pool: Pool; index: number }) => {
         {index + 1}
       </DataText>
       <DataText grid-area='address'>
-        <a target='_blank' rel='noopener noreferrer' href={scanAddress(String(pool.address))}>
+        <a target='_blank' rel='noopener noreferrer' href={scanAddress(pool.address.toBase58())}>
           {showData[FIELDS.ADDRESS]} ↗
         </a>
       </DataText>

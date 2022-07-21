@@ -59,9 +59,9 @@ const PoolOption = ({
   }
   return (
     <Form.Check
-      key={String(pool.address)}
+      key={pool.address.toBase58()}
       type='radio'
-      id={String(pool.address)}
+      id={pool.address.toBase58()}
       onClick={() => onSelect(pool)}
       label={
         <span style={{ whiteSpace: 'pre-line' }}>
@@ -70,8 +70,8 @@ const PoolOption = ({
           Amp: {pool.amp.toNumber() / AMPLIFICATION_FACTOR_BPS}
           <br />
           Address:&nbsp;
-          <a target='_blank' rel='noopener noreferrer' href={scanAddress(String(pool.address))}>
-            {String(pool.address)} ↗
+          <a target='_blank' rel='noopener noreferrer' href={scanAddress(pool.address.toBase58())}>
+            {pool.address.toBase58()} ↗
           </a>
         </span>
       }
@@ -228,7 +228,7 @@ const Swap: FC = () => {
                 onChange={(event) => {
                   let token: Currency | null
                   if (event.target.value === 'SOL') token = useSOL ? SOL : WSOL
-                  else token = tokenList.find((token) => String(token.mint) === event.target.value) ?? null
+                  else token = tokenList.find((token) => token.mint.toBase58() === event.target.value) ?? null
 
                   setFromToken(token)
                   if (token === toToken) setToToken(currencyList.filter((currency) => currency != toToken)[0])
@@ -238,7 +238,7 @@ const Swap: FC = () => {
                 <option style={{ display: 'none' }} />
                 <option value='SOL'>{useSOL ? 'SOL' : 'WSOL'}</option>
                 {tokenList.map((token) => (
-                  <option key={String(token.mint)} value={String(token.mint)}>
+                  <option key={token.mint.toBase58()} value={token.mint.toBase58()}>
                     {token.symbol}
                   </option>
                 ))}
@@ -263,7 +263,7 @@ const Swap: FC = () => {
                 onChange={(event) => {
                   let token: Currency | null
                   if (event.target.value === 'SOL') token = SOL
-                  else token = tokenList.find((token) => String(token.mint) === event.target.value) ?? null
+                  else token = tokenList.find((token) => token.mint.toBase58() === event.target.value) ?? null
                   setToToken(token)
                   if (token === fromToken) setFromToken(currencyList.filter((currency) => currency != fromToken)[0])
                 }}
@@ -272,7 +272,7 @@ const Swap: FC = () => {
                 <option style={{ display: 'none' }} />
                 <option value='SOL'>SOL</option>
                 {tokenList.map((token) => (
-                  <option key={String(token.mint)} value={String(token.mint)}>
+                  <option key={token.mint.toBase58()} value={token.mint.toBase58()}>
                     {token.symbol}
                   </option>
                 ))}
@@ -292,7 +292,7 @@ const Swap: FC = () => {
           ) : (
             fromValue &&
             pools.map((pool) => (
-              <PoolOption pool={pool} key={String(pool.address)} fromValue={fromValue} onSelect={setSelectedPool} />
+              <PoolOption pool={pool} key={pool.address.toBase58()} fromValue={fromValue} onSelect={setSelectedPool} />
             ))
           )}
         </Col>
