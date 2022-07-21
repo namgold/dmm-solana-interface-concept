@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import useContext from './useContext'
 
 const usePools = (fromToken: Currency | null, toToken: Currency | null): Pool[] | null | undefined => {
+  // undefined: loading
+  // null: error
   const context = useContext()
   const [pools, setPools] = useState<Pool[] | null | undefined>(undefined)
 
