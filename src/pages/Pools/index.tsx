@@ -17,6 +17,7 @@ const SendWrapper = styled.div`
   display: grid;
   gap: 2rem;
   // width: 550px;
+  min-width: 800px;
 `
 
 const Pools: FC = () => {
@@ -36,7 +37,7 @@ const Pools: FC = () => {
 
   return (
     <SendWrapper>
-      <h5>Pools</h5>
+      <h5>POOLS</h5>
       <Row>
         <Col sm={{ span: 10, offset: 2 }}>
           <FormLabel>Select Pair</FormLabel>

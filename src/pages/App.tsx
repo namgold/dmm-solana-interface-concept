@@ -4,7 +4,6 @@ import { Navigate, Route, Routes } from 'react-router'
 import { BrowserRouter } from 'react-router-dom'
 import Menu from '../components/Menu'
 import styled from 'styled-components'
-import Send from './Send'
 import Swap from './Swap'
 import Pools from './Pools'
 import AddPool from './AddPool'
@@ -34,7 +33,6 @@ const App: FC = () => {
         <BodyWrapper>
           <Routes>
             <Route path='/swap' element={<Swap />}></Route>
-            <Route path='/send' element={<Send />}></Route>
             <Route path='/pools' element={<Pools />}></Route>
             <Route path='/pools/my' element={<MyPools />}></Route>
             <Route path='/pools/add' element={<AddPool />}></Route>

@@ -27,9 +27,6 @@ const Menu = () => {
         <NavLink to='/pools/my' className='nav-link'>
           My Pools
         </NavLink>
-        <NavLink to='/send' className='nav-link'>
-          Send
-        </NavLink>
         <WalletMultiButton />
       </Container>
     </Navbar>
