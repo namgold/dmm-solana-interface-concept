@@ -89,7 +89,7 @@ const Pools: FC = () => {
         {pools === undefined ? 'Loading pools ...' : pools === null ? 'Pools not found' : <PoolsList pools={pools} />}
       </Row>
       <Row>
-        <Col sm={{ span: 6, offset: 3 }}>
+        <Col sm={{ span: 4, offset: 4 }}>
           <Link to='/pools/add'>
             <FullWidthButton variant='success'>Add New Pool</FullWidthButton>
           </Link>
