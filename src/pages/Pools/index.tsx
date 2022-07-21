@@ -1,8 +1,12 @@
-import React, { FC, useState } from 'react'
-import { Form } from 'react-bootstrap'
+import { Currency, SOL } from '@namgold/dmm-solana-sdk'
+import React, { FC, useEffect, useState } from 'react'
+import { Col, Form, FormLabel, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 
-import { SendLamport } from '../../components/SendLamport'
+import { useCurrencyList, useTokenList } from '../../hooks/useTokenlist'
+import { getAddress } from '../../utils'
+import PoolsList from '../../components/PoolsList'
+import usePools from '../../hooks/usePools'
 
 const SendWrapper = styled.div`
   border: 1px solid white;
@@ -10,42 +14,77 @@ const SendWrapper = styled.div`
   border-radius: 1rem;
   display: grid;
   gap: 2rem;
-  width: 550px;
+  // width: 550px;
 `
 
 const Pools: FC = () => {
-  const [toAddress, setToAddress] = useState<string>('HdTPmcFS3GTT2LqyRf1VRVoAKxhBiiiXWy11P3gnP5zr')
-  const [value, setValue] = useState<number>(1)
+  const [fromToken, setFromToken] = useState<Currency | null>(null)
+  const [toToken, setToToken] = useState<Currency | null>(null)
+
+  const tokenList = useTokenList()
+  const currencyList = useCurrencyList()
+  const pools = usePools(fromToken, toToken)
+
+  useEffect(() => {
+    if (!fromToken && !toToken && currencyList.length >= 2) {
+      setFromToken(currencyList[0])
+      setToToken(currencyList[1])
+    }
+  }, [currencyList, fromToken, toToken])
 
   return (
     <SendWrapper>
-      <h5>SEND SOL THROUGH CONNECTED WALLET</h5>
-      <Form>
-        <Form.Group className='mb-3'>
-          <Form.Label>To address</Form.Label>
-          <Form.Control
-            type='text'
-            placeholder='To address'
-            value={toAddress}
-            onChange={(event) => setToAddress(event.target.value)}
-          />
-          <Form.Text className='text-muted'>Address you gonna send SOL to</Form.Text>
-        </Form.Group>
+      <h5>Pools</h5>
+      <Row>
+        <Col sm={{ span: 10, offset: 2 }}>
+          <FormLabel>Select Pair</FormLabel>
+        </Col>
+        <Col sm={{ span: 4, offset: 2 }}>
+          <Form.Select
+            onChange={(event) => {
+              let token: Currency | null
+              if (event.target.value === 'SOL') token = SOL
+              else token = tokenList.find((token) => String(token.mint) === event.target.value) ?? null
 
-        <Form.Group className='mb-3' controlId='formBasicPassword'>
-          <Form.Label>Lamport Value</Form.Label>
-          <Form.Control
-            type='number'
-            placeholder='To address'
-            value={value}
-            onChange={(event) => setValue(Number(event.target.value))}
-          />
-          {value ? <Form.Text className='text-muted'>= {value / 10 ** 9} SOL</Form.Text> : null}
-          <br />
-          <Form.Text className='text-muted'>1 SOL = 1.000.000.000 Lamports</Form.Text>
-        </Form.Group>
-        <SendLamport address={toAddress} value={value} />
-      </Form>
+              setFromToken(token)
+              if (token === toToken) setToToken(currencyList.filter((currency) => currency != toToken)[0])
+            }}
+            value={fromToken ? getAddress(fromToken) : 'SOL'}
+          >
+            <option style={{ display: 'none' }} />
+            <option value='SOL'>SOL</option>
+            {tokenList.map((token) => (
+              <option key={String(token.mint)} value={String(token.mint)}>
+                {token.symbol}
+              </option>
+            ))}
+          </Form.Select>
+        </Col>
+        <Col sm={4}>
+          <Form.Select
+            onChange={(event) => {
+              let token: Currency | null
+              if (event.target.value === 'SOL') token = SOL
+              else token = tokenList.find((token) => String(token.mint) === event.target.value) ?? null
+
+              setToToken(token)
+              if (token === fromToken) setFromToken(currencyList.filter((currency) => currency != fromToken)[0])
+            }}
+            value={toToken ? getAddress(toToken) : 'SOL'}
+          >
+            <option style={{ display: 'none' }} />
+            <option value='SOL'>SOL</option>
+            {tokenList.map((token) => (
+              <option key={String(token.mint)} value={String(token.mint)}>
+                {token.symbol}
+              </option>
+            ))}
+          </Form.Select>
+        </Col>
+      </Row>
+      <Row>
+        <PoolsList pools={pools} />
+      </Row>
     </SendWrapper>
   )
 }

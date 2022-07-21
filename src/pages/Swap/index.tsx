@@ -1,5 +1,6 @@
 import React, { FC, MouseEventHandler, useCallback, useEffect, useState } from 'react'
 import {
+  AMPLIFICATION_FACTOR_BPS,
   Currency,
   CurrencyAmount,
   Percent,
@@ -28,7 +29,7 @@ import { shortenTx } from '../../utils/address'
 import { useNeedsApproved } from './hooks/useApprove'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import { FullWidthButton } from '../../components/Button'
-import { AMP_BPS } from '../../constants'
+import { getAddress } from '../../utils'
 
 const SwapWrapper = styled.div`
   border: 1px solid white;
@@ -38,10 +39,6 @@ const SwapWrapper = styled.div`
   gap: 2rem;
   width: 650px;
 `
-
-const getAddress = (token: Token | Currency): string => {
-  return token instanceof Token ? String(token.mint) : 'SOL'
-}
 
 const PoolOption = ({
   pool,
@@ -70,7 +67,7 @@ const PoolOption = ({
         <span style={{ whiteSpace: 'pre-line' }}>
           Amount out: {tokenAmountOut.toExact() ?? 0} {tokenAmountOut.token.symbol}
           <br />
-          Amp: {pool.amp.toNumber() / AMP_BPS}
+          Amp: {pool.amp.toNumber() / AMPLIFICATION_FACTOR_BPS}
           <br />
           Address:&nbsp;
           <a target='_blank' rel='noopener noreferrer' href={scanAddress(String(pool.address))}>
@@ -145,6 +142,7 @@ const Swap: FC = () => {
       setToToken(currencyList[1])
     }
   }, [currencyList, fromToken, toToken, publicKey])
+
   const enableSwap =
     toToken && fromToken && context && fromValue && publicKey && provider && selectedPool && router && !!trade
 
