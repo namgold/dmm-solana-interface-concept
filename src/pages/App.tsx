@@ -8,6 +8,7 @@ import Send from './Send'
 import Swap from './Swap'
 import Pools from './Pools'
 import AddPool from './AddPool'
+import MyPools from './MyPools'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -35,6 +36,7 @@ const App: FC = () => {
             <Route path='/swap' element={<Swap />}></Route>
             <Route path='/send' element={<Send />}></Route>
             <Route path='/pools' element={<Pools />}></Route>
+            <Route path='/pools/my' element={<MyPools />}></Route>
             <Route path='/pools/add' element={<AddPool />}></Route>
             <Route path='*' element={<Navigate to='swap' replace />} />
           </Routes>

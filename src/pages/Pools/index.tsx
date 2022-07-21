@@ -1,12 +1,14 @@
 import { Currency, SOL } from '@namgold/dmm-solana-sdk'
 import React, { FC, useEffect, useState } from 'react'
-import { Col, Form, FormLabel, Row } from 'react-bootstrap'
+import { Button, Col, Form, FormLabel, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 
 import { useCurrencyList, useTokenList } from '../../hooks/useTokenlist'
 import { getAddress } from '../../utils'
 import PoolsList from '../../components/PoolsList'
 import usePools from '../../hooks/usePools'
+import FullWidthButton from '../../components/Button/FullWidthButton'
+import { Link } from 'react-router-dom'
 
 const SendWrapper = styled.div`
   border: 1px solid white;
@@ -83,7 +85,14 @@ const Pools: FC = () => {
         </Col>
       </Row>
       <Row>
-        <PoolsList pools={pools} />
+        {pools === undefined ? 'Loading pools ...' : pools === null ? 'Pools not found' : <PoolsList pools={pools} />}
+      </Row>
+      <Row>
+        <Col sm={{ span: 6, offset: 3 }}>
+          <Link to='/pools/add'>
+            <FullWidthButton variant='success'>Add New Pool</FullWidthButton>
+          </Link>
+        </Col>
       </Row>
     </SendWrapper>
   )

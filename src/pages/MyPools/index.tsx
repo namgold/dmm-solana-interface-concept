@@ -10,13 +10,13 @@ const Wrapper = styled.div`
   width: 550px;
 `
 
-const AddPool: FC = () => {
+const MyPools: FC = () => {
   return (
     <Wrapper>
-      <h5>ADD POOL</h5>
+      <h5>MY POOLS</h5>
       🚧 Under construction
     </Wrapper>
   )
 }
 
-export default AddPool
+export default MyPools
