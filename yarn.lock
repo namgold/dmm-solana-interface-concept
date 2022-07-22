@@ -1770,10 +1770,10 @@
     "@solana/spl-token" "^0.1.8"
     "@solana/web3.js" "^1.31.0"
 
-"@namgold/dmm-solana-sdk@^1.0.15":
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/@namgold/dmm-solana-sdk/-/dmm-solana-sdk-1.0.15.tgz#27c7c394bf5af620b7554ce625621e8aa881530d"
-  integrity sha512-tFELupkRC2OIEWUrtDFvWvsmZknen1mfeSDHymXs8hb2E2mmHjaadmGkRsmYQHxo850r5KhcEa1/JjCCuJTXow==
+"@namgold/dmm-solana-sdk@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@namgold/dmm-solana-sdk/-/dmm-solana-sdk-1.1.0.tgz#09d99dcbfed54cdc0537e1a56cb8249cb147655b"
+  integrity sha512-VXro6TGN0Htx+1DtcZmxJFRd+C052fdB1EAq4vnQKe0tVrxySxTQgNtgJbk7QMnOHqx0WLlHwqaD+JaVBROTMw==
   dependencies:
     "@project-serum/anchor" "^0.24.2"
     "@solana/spl-token" "^0.2.0"

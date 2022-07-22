@@ -20,7 +20,7 @@
     "dependencies": {
         "@babel/runtime": "7.x",
         "@metaplex-foundation/mpl-token-metadata": "1.2.5",
-        "@namgold/dmm-solana-sdk": "^1.0.15",
+        "@namgold/dmm-solana-sdk": "^1.1.0",
         "@solana-mobile/wallet-adapter-mobile": "^0.0.1-alpha.0",
         "@solana/spl-token": "^0.2.0",
         "@solana/wallet-adapter-base": "^0.9.7",
