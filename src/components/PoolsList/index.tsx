@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import { AMPLIFICATION_FACTOR_BPS, FEE_BPS, Pool } from '@namgold/dmm-solana-sdk'
+import { AMPLIFICATION_FACTOR_BPS, Pool, PRECISION } from '@namgold/dmm-solana-sdk'
 import { shortenAddress } from '../../utils/address'
 import { scanAddress } from '../../utils/solscan'
 
@@ -70,7 +70,7 @@ const MAP_SHOW_DATA = (pool: Pool) => {
     [FIELDS.NAME]: 'name',
     [FIELDS.AMP]: pool.amp.toNumber() / AMPLIFICATION_FACTOR_BPS,
     [FIELDS.ADDRESS]: shortenAddress(pool.address.toBase58()),
-    [FIELDS.FEES]: pool.fee.toNumber() / FEE_BPS,
+    [FIELDS.FEES]: (pool.fee.toNumber() / PRECISION.toNumber()) * 100,
     [FIELDS.BALANCE_0]: pool.reserve0.toFixed(2) + ' ' + pool.token0.symbol,
     [FIELDS.BALANCE_1]: pool.reserve1.toFixed(2) + ' ' + pool.token1.symbol,
   }
@@ -89,7 +89,7 @@ const ListItem = ({ pool, index }: { pool: Pool; index: number }) => {
         </a>
       </DataText>
       <DataText grid-area='amp'>{showData[FIELDS.AMP]}</DataText>
-      <DataText grid-area='fees'>{showData[FIELDS.FEES]}</DataText>
+      <DataText grid-area='fees'>{showData[FIELDS.FEES]} %</DataText>
       <DataText grid-area='balance0'>{showData[FIELDS.BALANCE_0]}</DataText>
       <DataText grid-area='balance1'>{showData[FIELDS.BALANCE_1]}</DataText>
     </DashGrid>
