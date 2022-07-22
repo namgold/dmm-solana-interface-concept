@@ -1,6 +1,6 @@
 import { Currency, SOL } from '@namgold/dmm-solana-sdk'
 import React, { FC, useEffect, useState } from 'react'
-import { Button, Col, Form, FormLabel, Row } from 'react-bootstrap'
+import { Col, Form, FormLabel, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 
 import { useCurrencyList, useTokenList } from '../../hooks/useTokenlist'
@@ -17,7 +17,6 @@ const SendWrapper = styled.div`
   border-radius: 1rem;
   display: grid;
   gap: 2rem;
-  // width: 550px;
   min-width: 800px;
 `
 

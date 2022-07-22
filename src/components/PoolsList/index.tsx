@@ -8,6 +8,9 @@ import { scanAddress } from '../../utils/solscan'
 
 const List = styled(Box)`
   -webkit-overflow-scrolling: touch;
+  border: 1px solid white;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 `
 
 const Divider = styled.div`
@@ -42,6 +45,7 @@ const TableHeader = styled(DashGrid)`
   border-top-right-radius: 8px;
   padding: 20px;
   line-height: 20px;
+  border: 1px solid white;
 `
 
 const ListWrapper = styled.div``
@@ -131,7 +135,7 @@ function PoolsList({ pools }: { pools: Pool[] | null | undefined }) {
           <Text grid-area='balance1'>BALANCE</Text>
         </Flex>
       </TableHeader>
-      <Divider />
+      {/* <Divider /> */}
       {pairList?.length ? <List p={0}>{pairList}</List> : null}
     </ListWrapper>
   )
