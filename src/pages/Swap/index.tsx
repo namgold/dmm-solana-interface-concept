@@ -30,6 +30,7 @@ import { useNeedsApproved } from './hooks/useApprove'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import { FullWidthButton } from '../../components/Button'
 import { getAddress } from '../../utils'
+import { CenterText } from '../../components/Text'
 
 const SwapWrapper = styled.div`
   border: 1px solid white;
@@ -204,7 +205,9 @@ const Swap: FC = () => {
 
   return (
     <SwapWrapper>
-      <h5>SWAP</h5>
+      <CenterText>
+        <h5>SWAP</h5>
+      </CenterText>
       <Form>
         <Form.Group className='mb-3'>
           <Form.Label>Swap:</Form.Label>

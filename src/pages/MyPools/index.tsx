@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 import styled from 'styled-components'
+import { CenterText } from '../../components/Text'
 
 const Wrapper = styled.div`
   border: 1px solid white;
@@ -13,8 +14,10 @@ const Wrapper = styled.div`
 const MyPools: FC = () => {
   return (
     <Wrapper>
-      <h5>MY POOLS</h5>
-      🚧 Under construction
+      <CenterText>
+        <h5>MY POOLS</h5>
+      </CenterText>
+      <CenterText>🚧 Under construction</CenterText>
     </Wrapper>
   )
 }

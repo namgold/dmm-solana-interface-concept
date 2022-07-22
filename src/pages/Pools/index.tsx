@@ -9,6 +9,7 @@ import PoolsList from '../../components/PoolsList'
 import usePools from '../../hooks/usePools'
 import FullWidthButton from '../../components/Button/FullWidthButton'
 import { Link } from 'react-router-dom'
+import { CenterText } from '../../components/Text'
 
 const SendWrapper = styled.div`
   border: 1px solid white;
@@ -37,7 +38,9 @@ const Pools: FC = () => {
 
   return (
     <SendWrapper>
-      <h5>POOLS</h5>
+      <CenterText>
+        <h5>POOLS</h5>
+      </CenterText>
       <Row>
         <Col sm={{ span: 10, offset: 2 }}>
           <FormLabel>Select Pair</FormLabel>
@@ -86,7 +89,13 @@ const Pools: FC = () => {
         </Col>
       </Row>
       <Row>
-        {pools === undefined ? 'Loading pools ...' : pools === null ? 'Pools not found' : <PoolsList pools={pools} />}
+        {pools === undefined ? (
+          <CenterText>Loading pools ...</CenterText>
+        ) : pools === null ? (
+          <CenterText>Pools not found</CenterText>
+        ) : (
+          <PoolsList pools={pools} />
+        )}
       </Row>
       <Row>
         <Col sm={{ span: 4, offset: 4 }}>
