@@ -64,6 +64,7 @@ const PoolOption = ({
       type='radio'
       id={pool.address.toBase58()}
       onClick={() => onSelect(pool)}
+      name='pool'
       label={
         <span style={{ whiteSpace: 'pre-line' }}>
           Amount out: {tokenAmountOut.toExact() ?? 0} {tokenAmountOut.token.symbol}
