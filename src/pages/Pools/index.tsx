@@ -25,7 +25,7 @@ const Pools: FC = () => {
   const [toToken, setToToken] = useState<Currency | null>(null)
 
   const tokenList = useTokenList()
-  const currencyList = useCurrencyList()
+  const currencyList = useCurrencyList(true)
   const pools = usePools(fromToken, toToken)
 
   useEffect(() => {
@@ -99,7 +99,7 @@ const Pools: FC = () => {
       <Row>
         <Col sm={{ span: 4, offset: 4 }}>
           <Link to='/pools/add'>
-            <FullWidthButton variant='success'>Add New Pool</FullWidthButton>
+            <FullWidthButton variant='success'>Create New Pool</FullWidthButton>
           </Link>
         </Col>
       </Row>

@@ -29,7 +29,7 @@ import { shortenTx } from '../../utils/address'
 import { useNeedsApproved } from './hooks/useApprove'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import { FullWidthButton } from '../../components/Button'
-import { getAddress } from '../../utils'
+import { getAddressWithSOL } from '../../utils'
 import { CenterText } from '../../components/Text'
 
 const SwapWrapper = styled.div`
@@ -88,11 +88,13 @@ const Swap: FC = () => {
   const [fromToken, setFromToken] = useState<Currency | null>(null)
   const [toValue, setToValue] = useState<CurrencyAmount | null>(null)
   const [toToken, setToToken] = useState<Currency | null>(null)
+  const [useSOL, setUseSOL] = useState(true)
+  const isFromSOL = fromToken === SOL || fromToken === WSOL
 
   const balance = useBalance(fromToken)
 
   const tokenList = useTokenList()
-  const currencyList = useCurrencyList()
+  const currencyList = useCurrencyList(useSOL)
   const context = useContext()
   const provider = useProvider()
   const pools = usePools(fromToken, toToken)
@@ -101,8 +103,6 @@ const Swap: FC = () => {
   const trade = useTrade({ fromToken, toToken, fromValue, selectedPool })
   const [msg, setMsg] = useState<string | null | JSX.Element>(null)
   const [errorMsg, setErrorMsg] = useState<string | null | JSX.Element>(null)
-  const [useSOL, setUseSOL] = useState(true)
-  const isFromSOL = fromToken === SOL || fromToken === WSOL
 
   const {
     needsApproved,
@@ -126,9 +126,9 @@ const Swap: FC = () => {
   }, [approveErrorMsg])
 
   useEffect(() => {
-    // fromToken changed => reset fromValue's value
-    if (fromToken instanceof Token) setFromValue(new TokenAmount(fromToken, new BN(10 ** fromToken.decimals)))
-    else setFromValue(CurrencyAmount.sol(new BN(10 ** 9)))
+    // fromToken changed => reset fromValue's value with value = 1
+    if (fromToken instanceof Token) setFromValue(new TokenAmount(fromToken, new BN(10).pow(new BN(fromToken.decimals))))
+    else setFromValue(CurrencyAmount.sol(new BN(10).pow(new BN(9))))
   }, [fromToken])
 
   useEffect(() => {
@@ -154,6 +154,15 @@ const Swap: FC = () => {
     setErrorMsg(null)
     //reset selected pool right away there is any changing selected tokens
   }, [pools, fromToken, toToken])
+
+  const toggleUseSOL = useCallback(() => {
+    if (fromToken === SOL) setFromToken(WSOL)
+    else if (fromToken === WSOL) setFromToken(SOL)
+    else if (toToken === WSOL) setToToken(SOL)
+    else if (toToken === WSOL) setToToken(SOL)
+
+    setUseSOL((useSOL) => !useSOL)
+  }, [fromToken, toToken])
 
   const [swapping, setSwapping] = useState(false)
   const doSwap = useCallback(() => {
@@ -237,7 +246,7 @@ const Swap: FC = () => {
                   setFromToken(token)
                   if (token === toToken) setToToken(currencyList.filter((currency) => currency != toToken)[0])
                 }}
-                value={fromToken ? getAddress(fromToken) : 'SOL'}
+                value={getAddressWithSOL(fromToken)}
               >
                 <option style={{ display: 'none' }} />
                 <option value='SOL'>{useSOL ? 'SOL' : 'WSOL'}</option>
@@ -248,7 +257,7 @@ const Swap: FC = () => {
                 ))}
               </Form.Select>
               {isFromSOL ? (
-                <a onClick={() => setUseSOL((useSOL) => !useSOL)}>
+                <a onClick={toggleUseSOL}>
                   <Form.Label>Use {useSOL ? 'WSOL' : 'SOL'}</Form.Label>
                 </a>
               ) : null}
@@ -271,7 +280,7 @@ const Swap: FC = () => {
                   setToToken(token)
                   if (token === fromToken) setFromToken(currencyList.filter((currency) => currency != fromToken)[0])
                 }}
-                value={toToken ? getAddress(toToken) : 'SOL'}
+                value={getAddressWithSOL(toToken)}
               >
                 <option style={{ display: 'none' }} />
                 <option value='SOL'>SOL</option>
