@@ -18,7 +18,7 @@ import styled from 'styled-components'
 
 import { useBalance } from '../../hooks/useBalance'
 import { useCurrencyList, useTokenList } from '../../hooks/useTokenlist'
-import { convertAmount } from '../../utils/number'
+import { tryConvertAmount } from '../../utils/number'
 import useContext from '../../hooks/useContext'
 import useProvider from '../../hooks/useProvider'
 import usePools from '../../hooks/usePools'
@@ -228,7 +228,10 @@ const Swap: FC = () => {
                 value={fromValue?.toExact()}
                 onChange={(event) => {
                   if (!event.target.value) setFromValue(null)
-                  if (fromToken) setFromValue(convertAmount(parseFloat(event.target.value || '0'), fromToken))
+                  if (fromToken) {
+                    const newValue = tryConvertAmount(parseFloat(event.target.value || '0'), fromToken)
+                    newValue && setFromValue(newValue)
+                  }
                 }}
               />
               <Form.Label>

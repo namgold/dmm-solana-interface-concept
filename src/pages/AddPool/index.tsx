@@ -8,7 +8,7 @@ import { useCurrencyList, useTokenList } from '../../hooks/useTokenlist'
 import { Col, Form, FormLabel, Row } from 'react-bootstrap'
 import { getAddressWithSOL } from '../../utils'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { convertAmount } from '../../utils/number'
+import { tryConvertAmount } from '../../utils/number'
 import { useBalance } from '../../hooks/useBalance'
 import { BN } from 'bn.js'
 import { FullWidthButton } from '../../components/Button'
@@ -86,6 +86,7 @@ const AddPool: FC = () => {
   const [creating, setCreating] = useState(false)
   const doCreate = useCallback(() => {
     setCreating(true)
+    setTimeout(() => setCreating(false), 2000)
   }, [])
 
   const { setVisible } = useWalletModal()
@@ -106,7 +107,10 @@ const AddPool: FC = () => {
               value={currency1Value?.toExact()}
               onChange={(event) => {
                 if (!event.target.value) setCurrency1Value(null)
-                if (currency1) setCurrency1Value(convertAmount(parseFloat(event.target.value || '0'), currency1))
+                if (currency1) {
+                  const newValue = tryConvertAmount(parseFloat(event.target.value || '0'), currency1)
+                  newValue && setCurrency1Value(newValue)
+                }
               }}
               autoComplete='chrome-off'
             />
@@ -153,7 +157,10 @@ const AddPool: FC = () => {
               value={currency2Value?.toExact() ?? 0}
               onChange={(event) => {
                 if (!event.target.value) setCurrency2Value(null)
-                if (currency2) setCurrency2Value(convertAmount(parseFloat(event.target.value || '0'), currency2))
+                if (currency2) {
+                  const newValue = tryConvertAmount(parseFloat(event.target.value || '0'), currency2)
+                  newValue && setCurrency2Value(newValue)
+                }
               }}
               autoComplete='chrome-off'
             />
