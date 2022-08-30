@@ -5,6 +5,7 @@
   "logoURI": "https://kyberswap.com/favicon.png",
   "tokens": [
     {
+      "chainId": "111999111999",
       "address": "KNCVyKuChfKTLDJ3EQEatqF4kBEF2PNECoTRWsx5qXz",
       "symbol": "KNC",
       "name": "Kyber Network Crystal",
@@ -12,6 +13,7 @@
       "logoURI": "https://raw.githubusercontent.com/KyberNetwork/dmm-interface/main/src/assets/images/KNC.svg"
     },
     {
+      "chainId": "111999111999",
       "address": "ETHTjGKn8ze4Cbk3tWK6MKAV5v3xswpCvbXo1mQapzn8",
       "symbol": "ETH",
       "name": "Ether",
@@ -19,6 +21,7 @@
       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
     },
     {
+      "chainId": "111999111999",
       "address": "BNBbo7KptCeBm9eZFHeUTSLwtxTJTAwsZr6yYri497jg",
       "symbol": "BNB",
       "name": "BNB",
@@ -26,6 +29,7 @@
       "logoURI": "https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/1024/Binance-Coin-BNB-icon.png"
     },
     {
+      "chainId": "111999111999",
       "address": "BTCfmTMzFeV4BNvCiyTVVR1XaQPMvsrrdyjJeuE4VdEm",
       "symbol": "BTC",
       "name": "Bitcoin",
