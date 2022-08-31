@@ -6,6 +6,14 @@
   "tokens": [
     {
       "chainId": "111999111999",
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "WSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://bridge.glitterfinance.org/static/media/xsol.ebce64eb.png"
+    },
+    {
+      "chainId": "111999111999",
       "address": "KNCVyKuChfKTLDJ3EQEatqF4kBEF2PNECoTRWsx5qXz",
       "symbol": "KNC",
       "name": "Kyber Network Crystal",
