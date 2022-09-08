@@ -1,5 +1,5 @@
 import { AnchorProvider } from '@project-serum/anchor'
-import { useConnection } from '@solana/wallet-adapter-react'
+import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
 import { useMemo } from 'react'
 
 declare global {
@@ -10,7 +10,7 @@ declare global {
 
 const useProvider = () => {
   const { connection } = useConnection()
-  const wallet = window.solana
+  const wallet = useAnchorWallet()
 
   const provider = useMemo(
     () => (wallet ? new AnchorProvider(connection, wallet, AnchorProvider.defaultOptions()) : null),

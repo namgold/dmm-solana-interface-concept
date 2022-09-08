@@ -26,17 +26,14 @@ export type NetworkInfo = {
   }
 }
 
-export type SupportedNetwork = Extract<
-  WalletAdapterNetwork,
-  WalletAdapterNetwork.Testnet
-  // | WalletAdapterNetwork.Mainnet
->
+const SupportedSolanaNetworks = [
+  // WalletAdapterNetwork.Mainnet, //enable when filled NETWORKS_INFO configs
+  WalletAdapterNetwork.Testnet,
+  // WalletAdapterNetwork.Devnet, //enable when filled NETWORKS_INFO configs
+] as const
+type SupportedSolanaNetwork = typeof SupportedSolanaNetworks[number]
 
-export const SupportedNetwork = {
-  Testnet: WalletAdapterNetwork.Testnet,
-} as const
-
-const NETWORKS_INFO: { [key in SupportedNetwork]: NetworkInfo } = {
+const NETWORKS_INFO: { [key in SupportedSolanaNetwork]: NetworkInfo } = {
   [WalletAdapterNetwork.Testnet]: {
     tokenlist: TestnetTokenlist,
     programs: {
@@ -49,7 +46,6 @@ const NETWORKS_INFO: { [key in SupportedNetwork]: NetworkInfo } = {
 
 export default NETWORKS_INFO
 
-export const SelectedNetwork: SupportedNetwork =
-  process.env.REACT_APP_NETWORK && process.env.REACT_APP_NETWORK in SupportedNetwork
-    ? (process.env.REACT_APP_NETWORK as SupportedNetwork)
-    : SupportedNetwork.Testnet
+export const SelectedNetwork = SupportedSolanaNetworks.includes(process.env.REACT_APP_NETWORK as any)
+  ? (process.env.REACT_APP_NETWORK as SupportedSolanaNetwork)
+  : SupportedSolanaNetworks[0]
