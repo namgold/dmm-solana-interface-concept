@@ -18,7 +18,7 @@
       "chainId": 101,
       "address": "KNCkfGAnBUvoG5EJipAzSBjjaF8iNL4ivYsBS14DKdg",
       "symbol": "KNC",
-      "name": "Kyber Network Crystal",
+      "name": "Kyber Network Crystal - Kyber",
       "decimals": 3,
       "logoURI": "https://raw.githubusercontent.com/KyberNetwork/dmm-interface/main/src/assets/images/KNC.svg"
     },
@@ -26,7 +26,7 @@
       "chainId": 101,
       "address": "WETHkBH6utmaiesWTGFYQF9e8QYMddce53sd9afKdV7",
       "symbol": "WETH",
-      "name": "Wrapped Ether",
+      "name": "Wrapped Ether - Kyber",
       "decimals": 8,
       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
     },
@@ -34,7 +34,7 @@
       "chainId": 101,
       "address": "BNBk83snne6YWUkkEvwawg7c63Fviwz7uNtBMt6KxnVY",
       "symbol": "BNB",
-      "name": "BNB",
+      "name": "BNB - Kyber",
       "decimals": 18,
       "logoURI": "https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/1024/Binance-Coin-BNB-icon.png"
     },
@@ -42,7 +42,7 @@
       "chainId": 101,
       "address": "BTCkUS36Ms71qeHYDyEAtCfFT4BPw6prH7fVFu7mEfpD",
       "symbol": "BTC",
-      "name": "Bitcoin",
+      "name": "Bitcoin - Kyber",
       "decimals": 8,
       "logoURI": "https://cryptologos.cc/logos/wrapped-bitcoin-wbtc-logo.png"
     },
@@ -50,7 +50,7 @@
       "chainId": 101,
       "address": "DAikn1BdnzBGaiKxzJzM6AqVLAVo8E5uEjXESyDeSgrW",
       "symbol": "DAI",
-      "name": "DAI Stablecoin",
+      "name": "DAI Stablecoin - Kyber",
       "decimals": 8,
       "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EjmyN6qEC1Tf1JxiG1ae7UTJhUxSwk1TCWNWqxWV4J6o/logo.png"
     },
@@ -58,7 +58,7 @@
       "chainId": 101,
       "address": "USDCkgWXhhusZrB8ektBVFxgBEWY1jdLjPrav12fEJb",
       "symbol": "USDC",
-      "name": "USD Coin",
+      "name": "USD Coin - Kyber",
       "decimals": 6,
       "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png"
     },
@@ -66,7 +66,7 @@
       "chainId": 101,
       "address": "USDTkXeQFLVJrkptmE8qQrTZHK4hrkYEDGYCTc2yB9R",
       "symbol": "USDT",
-      "name": "USDT",
+      "name": "USDT - Kyber",
       "decimals": 6,
       "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg"
     },
@@ -74,9 +74,17 @@
       "chainId": 101,
       "address": "stSoLroqS5Hi9kEqnhLuDTUrKDhyKGnb68C7uFAMQbn",
       "symbol": "stSOL",
-      "name": "Lido Staked SOL",
+      "name": "Lido Staked SOL - Kyber",
       "decimals": 9,
       "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj/logo.png"
+    },
+    {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png"
     }
   ],
   "version": {
