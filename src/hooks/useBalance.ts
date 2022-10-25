@@ -3,7 +3,7 @@ import { BN } from '@project-serum/anchor'
 import { Currency, CurrencyAmount, Token, TokenAmount } from '@namgold/dmm-solana-sdk'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { AccountInfo, Connection, PublicKey } from '@solana/web3.js'
-import { getMint, TOKEN_PROGRAM_ID, AccountLayout, RawAccount, Mint } from '@solana/spl-token'
+import { TOKEN_PROGRAM_ID, AccountLayout, RawAccount } from '@solana/spl-token'
 import { useTokenList } from './useTokenlist'
 
 const cacheSOLBalanceRequest = new WeakMap<Connection, { [publicKey: string]: Promise<number> }>()
@@ -22,6 +22,7 @@ export const useSOLBalance = (): CurrencyAmount | false => {
           connectionCached[publicKey.toBase58()] = balanceRequest
           cacheSOLBalanceRequest.set(connection, connectionCached)
         }
+        debugger
         const balance = await balanceRequest
         if (solBalance === false || new BN(balance).cmp(solBalance.raw) !== 0)
           setSolBalance(CurrencyAmount.sol(new BN(balance)))
@@ -40,13 +41,8 @@ export const useSOLBalance = (): CurrencyAmount | false => {
 }
 type Overwrite<T, U> = Omit<T, keyof U> & U
 
-type ParsedMint = {
-  mint: Mint
-}
-type RawAccountParsed = Overwrite<RawAccount, ParsedMint>
-
 type ParsedData = {
-  data: RawAccountParsed
+  data: RawAccount
 }
 type AccountInfoParsed = Overwrite<AccountInfo<any>, ParsedData> & {
   pubkey: PublicKey
@@ -68,17 +64,12 @@ export const useAssociatedTokensAccounts = (): { [mintAddress: string]: AccountI
         response.value.map(async (ata) => {
           // use map only to use with Promise.all. It should be understand as .forEach
           const parsedAccountData = AccountLayout.decode(ata.account.data)
-          const parsedMintAccountData = {
-            ...parsedAccountData,
-            mint: await getMint(connection, parsedAccountData.mint),
-          }
           const parsedAta: AccountInfoParsed = {
             ...ata.account,
             pubkey: ata.pubkey,
-            data: parsedMintAccountData,
+            data: parsedAccountData,
           }
-          atas[parsedMintAccountData.mint.address.toBase58()] = parsedAta
-          return
+          atas[parsedAccountData.mint.toBase58()] = parsedAta
         }),
       )
       setAtas(atas)
@@ -114,8 +105,8 @@ export const useTokensBalances = (): { [mintAddress: string]: TokenAmount | fals
 
       Object.keys(atas).forEach((ataAddress) => {
         const accountInfo = atas[ataAddress].data
-        const token = new Token(accountInfo.mint.address, accountInfo.mint.decimals)
-        newSolBalances[accountInfo.mint.address.toBase58()] = new TokenAmount(token, accountInfo.amount)
+        const token = new Token(accountInfo.mint, 9)
+        newSolBalances[accountInfo.mint.toBase58()] = new TokenAmount(token, accountInfo.amount)
       })
 
       setSolBalances(newSolBalances)
