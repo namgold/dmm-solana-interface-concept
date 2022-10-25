@@ -85,6 +85,34 @@
       "name": "USD Coin",
       "decimals": 6,
       "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png"
+    },
+    {
+      "address": "KNCVyKuChfKTLDJ3EQEatqF4kBEF2PNECoTRWsx5qXz",
+      "symbol": "KNC",
+      "name": "Kyber Network Crystal",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/KyberNetwork/dmm-interface/main/src/assets/images/KNC.svg"
+    },
+    {
+      "address": "ETHTjGKn8ze4Cbk3tWK6MKAV5v3xswpCvbXo1mQapzn8",
+      "symbol": "ETH",
+      "name": "Ether",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+    },
+    {
+      "address": "BNBbo7KptCeBm9eZFHeUTSLwtxTJTAwsZr6yYri497jg",
+      "symbol": "BNB",
+      "name": "BNB",
+      "decimals": 9,
+      "logoURI": "https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/1024/Binance-Coin-BNB-icon.png"
+    },
+    {
+      "address": "BTCfmTMzFeV4BNvCiyTVVR1XaQPMvsrrdyjJeuE4VdEm",
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "decimals": 9,
+      "logoURI": "https://cryptologos.cc/logos/wrapped-bitcoin-wbtc-logo.png"
     }
   ],
   "version": {
